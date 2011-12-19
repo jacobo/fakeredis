@@ -375,17 +375,17 @@ class Redis
 
       def sadd(key, value)
         fail_unless_set(key)
-        case set = @data[key]
+        !! case set = @data[key]
           when nil then @data[key] = Set.new([value.to_s])
-          when Set then set.add(value.to_s)
+          when Set then set.add(value.to_s) unless set.include?(value.to_s)
         end
       end
 
       def srem(key, value)
         fail_unless_set(key)
-        case set = @data[key]
+        !! case set = @data[key]
           when nil then return
-          when Set then set.delete(value.to_s)
+          when Set then set.delete(value.to_s) if set.include?(value.to_s)
         end
       end
 
